@@ -17,23 +17,37 @@ class TravelPlannerAgent:
     """
     Main orchestration agent for travel planning.
 
-    Multi-step reasoning:
-      1. Extract user intent
-      2. Retrieve contextual data via Endee
-      3. Generate a structured travel plan
+    This is the core of our agentic AI system - it orchestrates the entire workflow:
+      1. Extract user intent (using LLM or heuristics)
+      2. Retrieve contextual data via Endee vector database (RAG)
+      3. Generate a structured travel plan (using LLM with RAG context or fallback logic)
+    
+    The agent is designed to work even without OpenAI API keys, falling back to
+    rule-based planning that still leverages RAG-retrieved context for better results.
     """
 
     def __init__(self, tools: TravelTools) -> None:
+        """
+        Initialize the travel planner agent.
+        
+        We try to set up OpenAI client if API key is available, but gracefully
+        fall back to rule-based planning if it's not. This makes the system
+        more robust and usable even without paid API access.
+        """
         self.tools = tools
-        self.memory = ConversationMemory()
+        self.memory = ConversationMemory()  # Simple conversation history
         self._client: OpenAI | None = None
 
+        # Try to initialize OpenAI client - but don't fail if unavailable
+        # This allows the system to work in fallback mode for testing/demos
         if OPENAI_API_KEY:
             try:
-                # Initialize OpenAI client - handle version compatibility
+                # Initialize OpenAI client - handle version compatibility issues
                 self._client = OpenAI(api_key=OPENAI_API_KEY)
                 logger.info("TravelPlannerAgent initialised with OpenAI backend")
             except Exception as exc:
+                # Some versions of openai library might have compatibility issues
+                # Log the error but continue with fallback mode
                 logger.warning(
                     "Failed to initialize OpenAI client: %s. Falling back to rule-based planner",
                     exc
@@ -85,21 +99,32 @@ class TravelPlannerAgent:
 
     @staticmethod
     def _heuristic_intent(query: str) -> Dict[str, Any]:
+        """
+        Fallback intent extraction using simple regex and keyword matching.
+        
+        This is used when OpenAI API is not available. It's intentionally simple
+        but covers common patterns like "3-day Goa trip under ₹10,000".
+        In production, you'd want more sophisticated NLP here, but this works
+        well enough for demos and testing.
+        """
         q_lower = query.lower()
 
-        # naive destination detection
+        # Simple destination detection - matches common Indian destinations
+        # In a real system, you might use NER or a destination database
         known_destinations = ["goa", "delhi", "mumbai", "bangalore", "jaipur", "agra"]
         destination = next((d.capitalize() for d in known_destinations if d in q_lower), "Not specified")
 
-        # budget as string with ₹ if present
+        # Extract budget - look for ₹ symbol or "rupees" keyword
+        # We preserve the original format to show it back to the user
         m = re.search(r"(₹\s*\d[\d,]*)|(\d[\d,]*\s*₹)", query)
         budget = m.group(0).strip() if m else "Not specified"
 
-        # duration
+        # Extract duration - look for patterns like "3-day", "3 day", "3 days"
         m_days = re.search(r"(\d+)\s*[-]?\s*day", q_lower)
-        duration = int(m_days.group(1)) if m_days else 3
+        duration = int(m_days.group(1)) if m_days else 3  # Default to 3 days if not specified
 
-        # preferences
+        # Extract preferences - match common travel keywords
+        # These help us tailor the itinerary and budget estimates
         pref_keywords = ["beach", "mountain", "culture", "food", "adventure", "luxury", "budget", "nightlife"]
         prefs = [k for k in pref_keywords if k in q_lower] or ["general sightseeing"]
 
@@ -116,15 +141,29 @@ class TravelPlannerAgent:
     def _retrieve_context(self, intent: Dict[str, Any]) -> str:
         """
         Perform comprehensive RAG retrieval for travel planning.
-        Uses multiple queries to gather context from different aspects.
+        
+        This is the heart of our RAG system - instead of a single query, we perform
+        multiple targeted searches across different aspects of travel:
+        - Destinations: general info about the place
+        - Accommodations: hotels and stays
+        - Food: dining options and cuisine
+        - Activities: things to do based on preferences
+        - General: overall travel guides
+        
+        This multi-aspect approach gives us richer context for generating detailed plans.
+        The retrieved information is then formatted into a structured context string
+        that the LLM (or fallback logic) can use to generate accurate, data-driven plans.
         """
-        # Get categorized retrieval results
+        # Get categorized retrieval results - each aspect gets top 3 results
+        # This balances comprehensiveness with token limits
         aspects = self.tools.retrieve_multiple_aspects(intent, top_k_per_aspect=3)
         
-        # Format all aspects into comprehensive context
+        # Format all aspects into a comprehensive context string
+        # We structure it clearly so the LLM can easily parse different sections
         context_parts = []
         context_parts.append("=== RAG-RETRIEVED TRAVEL CONTEXT ===\n")
         
+        # Add each aspect if we found relevant results
         if aspects.get("destinations"):
             context_parts.append("\n--- DESTINATION INFORMATION ---")
             context_parts.append(self.tools.format_context(aspects["destinations"]))
@@ -204,17 +243,34 @@ class TravelPlannerAgent:
     # Step 3 – Plan generation                                          #
     # ------------------------------------------------------------------ #
     def _generate_plan(self, intent: Dict[str, Any], context: str) -> Dict[str, Any]:
+        """
+        Generate the final travel plan using either LLM or fallback logic.
+        
+        We always compute a deterministic budget estimate first (using our
+        rule-based logic) so we have reliable numbers even if LLM fails.
+        Then we either:
+        1. Use LLM with RAG context (preferred - more natural, context-aware)
+        2. Use RAG-enhanced fallback logic (works without API keys, still uses RAG)
+        
+        The fallback is actually quite sophisticated - it extracts information
+        from the RAG context and builds detailed plans, so results are still good.
+        """
         duration = int(intent.get("duration") or 3)
+        
+        # Always compute budget deterministically - this ensures consistency
+        # The LLM might adjust it, but we have a baseline
         budget_info = self.tools.estimate_budget(
             intent.get("destination", "Not specified"),
             duration_days=duration,
             preferences=intent.get("preferences") or [],
         )
 
+        # If no OpenAI client, use our RAG-enhanced fallback
         if self._client is None:
             logger.info("Using RAG-enhanced rule-based plan generation")
             return self._fallback_plan(intent, budget_info, context)
 
+        # Try LLM-based generation with RAG context
         intent_json = json.dumps(intent, ensure_ascii=False)
         prompt = PLAN_GENERATION_PROMPT.format(intent_json=intent_json, context=context)
 
@@ -229,24 +285,26 @@ class TravelPlannerAgent:
                     },
                     {"role": "user", "content": prompt},
                 ],
-                temperature=0.3,
+                temperature=0.3,  # Lower temperature for more consistent, factual output
             )
             raw = completion.choices[0].message.content or "{}"
             plan = json.loads(raw)
 
-            # Ensure required top-level fields exist and budget info is present
+            # Ensure required top-level fields exist - LLM might miss some
             plan.setdefault("destination", intent.get("destination", "Not specified"))
             plan.setdefault("itinerary", [])
             plan.setdefault("hotels", [])
             plan.setdefault("tips", [])
 
             # Merge our deterministic budget into the LLM's structure
+            # This ensures we always have reliable budget numbers
             llm_budget = plan.get("budget") or {}
             llm_budget.update(budget_info)
             plan["budget"] = llm_budget
 
             return plan
         except Exception:
+            # If LLM fails (network, API error, invalid JSON), fall back gracefully
             logger.exception("LLM plan generation failed, falling back to RAG-enhanced plan")
             return self._fallback_plan(intent, budget_info, context)
 

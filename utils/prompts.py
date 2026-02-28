@@ -1,3 +1,15 @@
+"""
+Prompt templates for LLM interactions.
+
+These prompts are carefully crafted to:
+1. Extract structured intent from natural language
+2. Generate travel plans using RAG-retrieved context
+3. Ensure consistent JSON output format
+
+The prompts emphasize using retrieved context (RAG) as the primary source
+of information, which is crucial for generating accurate, data-driven plans.
+"""
+
 INTENT_EXTRACTION_PROMPT = """
 You are an AI assistant that extracts structured travel intent from a user query.
 

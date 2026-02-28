@@ -10,9 +10,14 @@ from utils.config import logger
 class TravelTools:
     """
     Toolset used by the travel planning agent.
-
-    - retrieval: semantic search over Endee vector DB
-    - budget estimation: rough INR cost estimates
+    
+    This class provides the agent with two key capabilities:
+    1. **Retrieval**: Semantic search over Endee vector database using embeddings
+    2. **Budget estimation**: Deterministic cost estimates in INR
+    
+    The retrieval system is the core of our RAG implementation - it performs
+    multiple targeted searches across different travel aspects to gather
+    comprehensive context for plan generation.
     """
 
     def __init__(self, embedder: Embedder, vector_store: EndeeVectorStore) -> None:
@@ -87,7 +92,21 @@ class TravelTools:
     ) -> Dict[str, List[Dict[str, Any]]]:
         """
         Perform multiple RAG queries for different aspects of travel planning.
-        Returns categorized retrieval results for better context.
+        
+        This is a key enhancement over simple single-query RAG. Instead of one
+        broad search, we perform targeted searches for:
+        1. Destinations: General info about the place
+        2. Accommodations: Hotels and stays with prices
+        3. Food: Dining options and cuisine
+        4. Activities: Things to do based on user preferences
+        5. General: Overall travel guides and tips
+        
+        Each aspect gets top_k results, giving us comprehensive context while
+        keeping token usage reasonable. The results are categorized so the
+        plan generator can easily find relevant information for each section.
+        
+        This multi-aspect approach significantly improves plan quality because
+        we're not relying on a single query to cover everything.
         """
         destination = intent.get("destination", "").lower()
         duration = intent.get("duration", 3)
@@ -95,25 +114,25 @@ class TravelTools:
         
         aspects = {}
         
-        # 1. Destination information
+        # 1. Destination information - general overview and attractions
         if destination:
             dest_query = f"{destination} travel destination attractions"
             aspects["destinations"] = self.retrieve_travel_data(dest_query, top_k=top_k_per_aspect)
         
-        # 2. Accommodation/hotels
+        # 2. Accommodation/hotels - where to stay with budget info
         hotel_query = f"{destination} hotels accommodation stays budget"
         aspects["accommodations"] = self.retrieve_travel_data(hotel_query, top_k=top_k_per_aspect)
         
-        # 3. Food and dining
+        # 3. Food and dining - local cuisine and restaurants
         food_query = f"{destination} food restaurants cuisine dining"
         aspects["food"] = self.retrieve_travel_data(food_query, top_k=top_k_per_aspect)
         
-        # 4. Activities based on preferences
+        # 4. Activities based on preferences - personalized recommendations
         if preferences:
             activity_query = f"{destination} {' '.join(preferences)} activities things to do"
             aspects["activities"] = self.retrieve_travel_data(activity_query, top_k=top_k_per_aspect)
         
-        # 5. General travel info
+        # 5. General travel info - overall guides and tips
         general_query = f"{destination} {duration} day trip travel guide"
         aspects["general"] = self.retrieve_travel_data(general_query, top_k=top_k_per_aspect)
         
@@ -130,14 +149,28 @@ class TravelTools:
         preferences: List[str] | None = None,
     ) -> Dict[str, Any]:
         """
-        Very rough budget estimate in INR.
-
-        This is intentionally simple and deterministic so the agent can rely
-        on it even without an LLM call.
+        Deterministic budget estimate in INR.
+        
+        This is intentionally simple and rule-based so the agent can rely
+        on it even without an LLM call. The estimates are rough but reasonable
+        for budget-conscious Indian travel.
+        
+        We use base costs per destination (based on typical mid-range travel)
+        and apply multipliers based on preferences (luxury = more expensive,
+        budget = less expensive).
+        
+        In a production system, you'd want to:
+        - Pull real-time prices from APIs
+        - Consider seasonal variations
+        - Factor in group size
+        - Use historical booking data
+        But for this demo, deterministic estimates work well.
         """
         dest_key = (destination or "").lower()
         prefs = [p.lower() for p in (preferences or [])]
 
+        # Base daily costs per destination (accommodation, food, transport)
+        # These are rough estimates for mid-range travel in 2024
         base_costs = {
             "goa": {"accommodation": 1200, "food": 500, "transport": 300},
             "mumbai": {"accommodation": 1800, "food": 600, "transport": 400},
@@ -146,22 +179,25 @@ class TravelTools:
             "jaipur": {"accommodation": 1000, "food": 400, "transport": 250},
             "agra": {"accommodation": 900, "food": 400, "transport": 250},
         }
+        # Default to Goa-like costs if destination not in our list
         costs = base_costs.get(
             dest_key, {"accommodation": 1200, "food": 500, "transport": 300}
         )
 
-        # Simple preference-based multipliers
+        # Apply preference-based multipliers
+        # Luxury travel costs more, budget travel costs less
         multiplier = 1.0
         if "luxury" in prefs:
-            multiplier += 0.6
+            multiplier += 0.6  # 60% more expensive
         if "adventure" in prefs:
-            multiplier += 0.2
+            multiplier += 0.2  # Adventure activities cost more
         if "budget" in prefs:
-            multiplier -= 0.2
+            multiplier -= 0.2  # Budget travel is cheaper
 
+        # Calculate final costs
         adjusted = {k: int(v * multiplier) for k, v in costs.items()}
         daily_cost = sum(adjusted.values())
-        total_cost = daily_cost * max(duration_days, 1)
+        total_cost = daily_cost * max(duration_days, 1)  # Ensure at least 1 day
 
         logger.info(
             "Estimated budget for destination=%s days=%d prefs=%s: total=%d",
@@ -175,6 +211,6 @@ class TravelTools:
             "currency": "INR",
             "daily_cost": daily_cost,
             "total_cost": total_cost,
-            "breakdown": adjusted,
+            "breakdown": adjusted,  # Detailed breakdown for transparency
         }
 

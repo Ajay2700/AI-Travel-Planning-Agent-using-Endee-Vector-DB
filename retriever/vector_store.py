@@ -17,11 +17,20 @@ from utils.config import (
 
 class EndeeVectorStore:
     """
-    Thin integration layer with the Endee vector database.
-
-    This class assumes a running Endee HTTP service exposed by the forked
-    `endee` repository. The concrete HTTP paths and payload shapes may need
-    to be adjusted to match the version of Endee you deploy.
+    Integration layer with the Endee vector database for RAG operations.
+    
+    This class handles all interactions with Endee:
+    - Creating/verifying indexes
+    - Storing document embeddings with metadata
+    - Performing semantic similarity search
+    
+    It's designed to be resilient - if Endee is unavailable, it falls back
+    to in-memory storage and semantic search using cosine similarity. This
+    ensures the RAG system still works even without the vector database running,
+    though with reduced scalability.
+    
+    The API endpoints are based on Endee's REST API (see https://github.com/endee-io/endee).
+    If the API changes in future versions, update the endpoints here.
     """
 
     def __init__(
@@ -246,13 +255,23 @@ class EndeeVectorStore:
     ) -> List[Dict[str, Any]]:
         """
         RAG-enabled fallback search using cosine similarity on embeddings.
-        Computes embeddings for stored documents if needed and performs semantic search.
+        
+        When Endee is unavailable, we still perform proper semantic search:
+        1. Compute embeddings for documents that don't have them (lazy loading)
+        2. Normalize query and document vectors
+        3. Compute cosine similarity (dot product of normalized vectors)
+        4. Return top_k most similar documents
+        
+        This ensures RAG quality is maintained even in fallback mode. The only
+        limitation is that it's in-memory, so it won't scale to millions of documents
+        like Endee would, but it's perfect for demos and small datasets.
         """
         if not self._fallback_data:
             logger.warning("No fallback data available for search")
             return []
         
-        # Compute embeddings for documents that don't have them
+        # Lazy-load embeddings: compute them on-demand if not already cached
+        # This saves memory and computation time
         from retriever.embedder import Embedder
         embedder = Embedder()
         
@@ -263,28 +282,31 @@ class EndeeVectorStore:
             
             if embedding is None:
                 # Generate embedding from document text
+                # We combine title and description for richer semantic representation
                 text = f"{doc.get('title', '')} {doc.get('description', '')}"
                 embedding = embedder.embed_text(text)
-                item["embedding"] = embedding
+                item["embedding"] = embedding  # Cache for future searches
             
             doc_vectors.append(embedding)
         
-        # Compute cosine similarity
+        # Compute cosine similarity: normalize vectors and take dot product
+        # Cosine similarity ranges from -1 to 1, where 1 means identical
         import numpy as np
         doc_vectors_array = np.array(doc_vectors)
-        query_norm = query_vector / (np.linalg.norm(query_vector) + 1e-8)
+        query_norm = query_vector / (np.linalg.norm(query_vector) + 1e-8)  # Add small epsilon to avoid division by zero
         doc_norms = doc_vectors_array / (np.linalg.norm(doc_vectors_array, axis=1, keepdims=True) + 1e-8)
         similarities = np.dot(doc_norms, query_norm)
         
-        # Get top_k most similar
+        # Get top_k most similar documents (highest similarity scores)
         top_indices = np.argsort(similarities)[::-1][:top_k]
         
+        # Format results to match Endee's response format
         results = []
         for idx in top_indices:
             item = self._fallback_data[idx]
             results.append({
                 "document": item.get("document", {}),
-                "score": float(similarities[idx]),
+                "score": float(similarities[idx]),  # Convert numpy float to Python float
                 "id": item.get("id"),
             })
         

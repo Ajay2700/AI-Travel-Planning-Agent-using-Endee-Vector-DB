@@ -22,17 +22,26 @@ st.set_page_config(
 @st.cache_resource
 def init_agent() -> tuple[TravelPlannerAgent | None, bool]:
     """
-    Create and cache the travel planner agent for the app.
-    Returns (agent, endee_available) tuple.
+    Create and cache the travel planner agent for the Streamlit app.
+    
+    We use @st.cache_resource to ensure the agent is only initialized once
+    and reused across Streamlit reruns. This is important because:
+    - Embedder model loading is expensive (takes a few seconds)
+    - Vector store connection should be persistent
+    - Agent initialization should happen once per session
+    
+    Returns (agent, endee_available) tuple so the UI can show connection status.
     """
     try:
+        # Initialize components in order: embedder -> vector store -> tools -> agent
         embedder = Embedder()
         store = EndeeVectorStore()
-        endee_available = store.is_available()
+        endee_available = store.is_available()  # Check if Endee is actually connected
         tools = TravelTools(embedder, store)
         agent = TravelPlannerAgent(tools)
         return agent, endee_available
     except Exception as exc:  # pragma: no cover - startup failure path
+        # If initialization fails, log it but don't crash the app
         logger.exception("Failed to initialise TravelPlannerAgent")
         return None, False
 

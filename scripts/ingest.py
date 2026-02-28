@@ -32,20 +32,34 @@ def load_travel_data(path: str) -> List[Dict[str, Any]]:
 
 
 def ingest() -> None:
-    """Main ingestion pipeline."""
+    """
+    Main ingestion pipeline.
+    
+    This script loads travel data from JSON, generates embeddings for each document,
+    and stores them in Endee (or fallback storage if Endee is unavailable).
+    
+    Run this once after starting Endee to populate the vector database with
+    travel information. The embeddings enable semantic search for RAG.
+    """
     data_path = os.path.join(PROJECT_ROOT, "data", "travel_data.json")
     docs = load_travel_data(data_path)
 
+    # Initialize embedder and vector store
     embedder = Embedder()
     store = EndeeVectorStore()
 
     # Combine title + description as the text to embed
+    # This gives us richer semantic representation than just title or description alone
     texts = [
         f"{doc.get('title', '')} - {doc.get('description', '')}".strip()
         for doc in docs
     ]
+    
+    # Generate embeddings in batch (much faster than one-by-one)
     embeddings = embedder.embed_batch(texts)
 
+    # Store documents with their embeddings in Endee
+    # Each document's metadata is preserved for filtering/display
     store.add_documents(docs, embeddings)
     logger.info("Ingestion finished successfully")
 
