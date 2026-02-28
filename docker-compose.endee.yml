@@ -1,0 +1,19 @@
+# Docker Compose configuration for Endee Vector Database
+# Based on: https://github.com/endee-io/endee
+# Official documentation: https://docs.endee.io/quick-start
+
+services:
+  endee:
+    image: endeeio/endee-server:latest
+    container_name: endee-server
+    ports:
+      - "8080:8080"
+    environment:
+      NDD_NUM_THREADS: 0
+      NDD_AUTH_TOKEN: ""  # Optional: set for authentication (leave empty for no auth)
+    volumes:
+      - endee-data:/data
+    restart: unless-stopped
+
+volumes:
+  endee-data:

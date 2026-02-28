@@ -1,0 +1,274 @@
+[
+  {
+    "id": "goa-destination",
+    "title": "Goa Beach Paradise",
+    "description": "Goa offers beautiful beaches, Portuguese architecture, seafood shacks, and vibrant nightlife. Ideal for budget trips with backpacker hostels and homestays. Best visited from October to March. North Goa is famous for beaches and parties, while South Goa offers tranquility and luxury resorts.",
+    "destination": "goa",
+    "type": "destination",
+    "budget_category": "budget",
+    "activities": ["beach", "water sports", "nightlife", "culture", "heritage"],
+    "best_time_to_visit": "October to March",
+    "transport_modes": ["flight", "train", "bus", "car"],
+    "key_attractions": ["Calangute Beach", "Baga Beach", "Anjuna Beach", "Old Goa Churches", "Fort Aguada", "Dudhsagar Falls", "Spice Plantations"],
+    "recommended_duration": "3-5 days"
+  },
+  {
+    "id": "goa-hotels-budget",
+    "title": "Budget Stays in North Goa",
+    "description": "Guest houses and hostels near Calangute, Baga, and Anjuna with prices starting from ₹800–₹1,500 per night in the off-season. Peak season (Dec-Feb) prices can go up to ₹2,500-₹3,500. Many hostels offer dorm beds from ₹300-₹600. Recommended areas: Calangute (beach access), Anjuna (backpacker vibe), Arambol (peaceful).",
+    "destination": "goa",
+    "type": "accommodation",
+    "price_range_inr": "₹800–₹2,000",
+    "area": "North Goa",
+    "recommendations": ["Zostel Goa", "Goa Backpackers Hostel", "Casa Vagator", "Anjuna Beach Resort"],
+    "amenities": ["WiFi", "AC", "Beach Access", "Restaurant"]
+  },
+  {
+    "id": "goa-hotels-midrange",
+    "title": "Mid-Range Hotels in Goa",
+    "description": "Comfortable hotels and resorts with better amenities. Prices range from ₹2,500–₹5,000 per night. Good options in Candolim, Baga, and South Goa. Many offer pool, restaurant, and beach proximity.",
+    "destination": "goa",
+    "type": "accommodation",
+    "price_range_inr": "₹2,500–₹5,000",
+    "area": "North & South Goa",
+    "recommendations": ["Candolim Beach Resort", "Taj Fort Aguada", "Alila Diwa Goa"]
+  },
+  {
+    "id": "goa-food",
+    "title": "Goan Food & Local Shacks",
+    "description": "Fresh seafood thalis, Goan fish curry-rice, and street food like pav bhaji and pani puri. Beach shacks typically cost ₹150–₹400 per meal. Must-try: Fish curry-rice (₹200-₹300), Prawn balchao, Bebinca (dessert), Feni (local liquor). Best food areas: Anjuna, Calangute, Panjim.",
+    "destination": "goa",
+    "type": "food",
+    "estimated_meal_cost_inr": "₹150–₹400",
+    "recommended_places": ["Martin's Corner", "Fisherman's Wharf", "Curlies Beach Shack", "Gunpowder"],
+    "cuisine_types": ["Goan", "Seafood", "Continental", "Street Food"]
+  },
+  {
+    "id": "goa-activities-detailed",
+    "title": "Comprehensive Goa Activities & Itinerary",
+    "description": "Day 1: Morning - Calangute Beach (9 AM-12 PM), water sports (parasailing ₹1,500, jet ski ₹800). Afternoon - Baga Beach (1-4 PM), lunch at beach shack. Evening - Anjuna Flea Market (5-8 PM), nightlife at Tito's or Mambo's. Day 2: Morning - Old Goa churches (9 AM-12 PM), Basilica of Bom Jesus, Se Cathedral. Afternoon - Spice plantation tour (1-4 PM, ₹500-₹800). Evening - Sunset at Fort Aguada (5-7 PM), dinner in Panjim. Day 3: Morning - Dudhsagar Falls day trip (6 AM-6 PM, ₹1,500-₹2,500 including transport) or South Goa beaches (Palolem, Colva). Afternoon - Beach relaxation, water activities. Evening - Local market shopping, farewell dinner.",
+    "destination": "goa",
+    "type": "itinerary",
+    "recommended_duration_days": 3,
+    "detailed_activities": [
+      {
+        "day": 1,
+        "morning": ["Calangute Beach visit (9 AM)", "Water sports: Parasailing, Jet Ski"],
+        "afternoon": ["Baga Beach (1-4 PM)", "Beach shack lunch"],
+        "evening": ["Anjuna Flea Market (5-8 PM)", "Nightlife at Tito's or Mambo's"],
+        "transport": "Scooter rental (₹300-₹500/day) or taxi (₹1,500-₹2,500/day)"
+      },
+      {
+        "day": 2,
+        "morning": ["Old Goa Churches (9 AM-12 PM)", "Basilica of Bom Jesus", "Se Cathedral"],
+        "afternoon": ["Spice Plantation Tour (1-4 PM, ₹500-₹800)"],
+        "evening": ["Sunset at Fort Aguada (5-7 PM)", "Dinner in Panjim"],
+        "transport": "Taxi or self-drive car"
+      },
+      {
+        "day": 3,
+        "morning": ["Dudhsagar Falls day trip (6 AM-6 PM) OR South Goa beaches"],
+        "afternoon": ["Beach relaxation", "Water activities"],
+        "evening": ["Local market shopping", "Farewell dinner"],
+        "transport": "Organized tour or taxi"
+      }
+    ],
+    "transport_recommendations": {
+      "getting_to_goa": "Flight to Dabolim Airport (₹3,000-₹8,000) or train to Madgaon/Karmali (₹500-₹2,500)",
+      "local_transport": "Scooter rental (₹300-₹500/day), Taxi (₹1,500-₹2,500/day), Local buses (₹10-₹50)"
+    }
+  },
+  {
+    "id": "delhi-destination",
+    "title": "Delhi Heritage & Food",
+    "description": "Capital city with Red Fort, India Gate, Qutub Minar, and Chandni Chowk. Famous for street food and budget shopping. Rich Mughal and British colonial history. Best time: October to March. Must-visit areas: Old Delhi (heritage), New Delhi (modern), Connaught Place (shopping).",
+    "destination": "delhi",
+    "type": "destination",
+    "budget_category": "budget",
+    "activities": ["culture", "history", "food", "shopping", "heritage"],
+    "best_time_to_visit": "October to March",
+    "key_attractions": ["Red Fort", "India Gate", "Qutub Minar", "Lotus Temple", "Humayun's Tomb", "Chandni Chowk", "Jama Masjid", "Akshardham Temple"],
+    "recommended_duration": "2-4 days"
+  },
+  {
+    "id": "delhi-transport",
+    "title": "Delhi Metro & Local Transport",
+    "description": "Delhi Metro covers most major attractions with fares between ₹10–₹60 per ride. Auto-rickshaws and app cabs help cover last-mile. Metro Day Pass: ₹200. Recommended routes: Yellow Line (Qutub Minar, Connaught Place), Violet Line (Red Fort, Jama Masjid). Auto-rickshaw: ₹20-₹100 for short distances. App cabs: ₹100-₹300 for 5-10 km.",
+    "destination": "delhi",
+    "type": "transport",
+    "metro_fare_range": "₹10–₹60",
+    "metro_day_pass": "₹200",
+    "auto_rickshaw_range": "₹20–₹100",
+    "cab_range": "₹100–₹300"
+  },
+  {
+    "id": "delhi-hotels",
+    "title": "Delhi Accommodation Options",
+    "description": "Budget hotels in Paharganj and Karol Bagh (₹800-₹1,500/night). Mid-range in Connaught Place and South Delhi (₹2,000-₹4,000/night). Luxury options in Aerocity and Gurgaon (₹5,000+/night).",
+    "destination": "delhi",
+    "type": "accommodation",
+    "price_range_inr": "₹800–₹1,500",
+    "area": "Paharganj, Karol Bagh",
+    "recommendations": ["Hotel Ajanta", "Hotel Broadway", "Treebo Hotels"]
+  },
+  {
+    "id": "delhi-food",
+    "title": "Delhi Street Food & Restaurants",
+    "description": "Famous for street food in Chandni Chowk, Paranthe Wali Gali, Karim's. Must-try: Chole Bhature (₹50-₹100), Paratha (₹30-₹80), Kebabs (₹100-₹300), Butter Chicken (₹200-₹400). Best areas: Old Delhi (Chandni Chowk), Connaught Place, Khan Market.",
+    "destination": "delhi",
+    "type": "food",
+    "estimated_meal_cost_inr": "₹50–₹300",
+    "recommended_places": ["Karim's", "Paranthe Wali Gali", "Kuremal Kulfi", "Old Famous Jalebi Wala"]
+  },
+  {
+    "id": "delhi-itinerary",
+    "title": "Delhi Detailed Itinerary",
+    "description": "Day 1: Morning - Red Fort (9-11 AM, ₹35 entry), Jama Masjid (11:30 AM-12:30 PM, free). Afternoon - Chandni Chowk food walk (1-3 PM), Paranthe Wali Gali. Evening - India Gate (5-7 PM, free), Connaught Place shopping. Day 2: Morning - Qutub Minar (9-11 AM, ₹35), Humayun's Tomb (11:30 AM-1 PM, ₹30). Afternoon - Lotus Temple (2-4 PM, free). Evening - Dilli Haat shopping (5-8 PM), dinner at Khan Market. Day 3: Morning - Akshardham Temple (9 AM-12 PM, free entry, exhibition ₹170). Afternoon - National Museum or shopping. Evening - Hauz Khas Village (5-9 PM) for cafes and nightlife.",
+    "destination": "delhi",
+    "type": "itinerary",
+    "recommended_duration_days": 3,
+    "detailed_activities": [
+      {
+        "day": 1,
+        "morning": ["Red Fort (9-11 AM, ₹35)", "Jama Masjid (11:30 AM-12:30 PM)"],
+        "afternoon": ["Chandni Chowk food walk (1-3 PM)", "Paranthe Wali Gali"],
+        "evening": ["India Gate (5-7 PM)", "Connaught Place shopping"],
+        "transport": "Metro + Auto-rickshaw (₹50-₹150)"
+      },
+      {
+        "day": 2,
+        "morning": ["Qutub Minar (9-11 AM, ₹35)", "Humayun's Tomb (11:30 AM-1 PM, ₹30)"],
+        "afternoon": ["Lotus Temple (2-4 PM)"],
+        "evening": ["Dilli Haat shopping (5-8 PM)", "Dinner at Khan Market"],
+        "transport": "Metro + Cab (₹200-₹400)"
+      },
+      {
+        "day": 3,
+        "morning": ["Akshardham Temple (9 AM-12 PM)"],
+        "afternoon": ["National Museum or shopping"],
+        "evening": ["Hauz Khas Village (5-9 PM)"],
+        "transport": "Metro + Cab"
+      }
+    ]
+  },
+  {
+    "id": "mumbai-destination",
+    "title": "Mumbai City Experience",
+    "description": "Gateway of India, Marine Drive, Bandra, and Colaba with sea views and late-night food options. Financial capital with Bollywood connections. Best time: November to February. Must-visit: Gateway of India, Marine Drive, Elephanta Caves, Bandra, Juhu Beach.",
+    "destination": "mumbai",
+    "type": "destination",
+    "budget_category": "mid-range",
+    "activities": ["beach", "nightlife", "food", "culture", "shopping"],
+    "best_time_to_visit": "November to February",
+    "key_attractions": ["Gateway of India", "Marine Drive", "Elephanta Caves", "Bandra", "Juhu Beach", "Colaba Causeway", "Leopold Cafe"],
+    "recommended_duration": "2-3 days"
+  },
+  {
+    "id": "mumbai-transport",
+    "title": "Mumbai Local Transport",
+    "description": "Local trains (Western, Central, Harbour lines) are the lifeline. Fares: ₹5-₹55. BEST buses: ₹5-₹25. Auto-rickshaws (only in suburbs): ₹20-₹150. Taxis: ₹100-₹300. Recommended: Get a daily pass for trains.",
+    "destination": "mumbai",
+    "type": "transport",
+    "train_fare_range": "₹5–₹55",
+    "bus_fare_range": "₹5–₹25"
+  },
+  {
+    "id": "bangalore-destination",
+    "title": "Bangalore Cool Getaway",
+    "description": "Pleasant weather, cafes, breweries, and nearby day trips to Nandi Hills and Mysore. IT hub with vibrant nightlife. Best time: Year-round, but October to March is ideal. Must-visit: Cubbon Park, Lalbagh, Bangalore Palace, UB City, MG Road.",
+    "destination": "bangalore",
+    "type": "destination",
+    "budget_category": "mid-range",
+    "activities": ["food", "nightlife", "short trips", "culture"],
+    "best_time_to_visit": "Year-round (October-March ideal)",
+    "key_attractions": ["Cubbon Park", "Lalbagh Botanical Garden", "Bangalore Palace", "UB City", "Nandi Hills", "Mysore Palace"],
+    "recommended_duration": "2-3 days"
+  },
+  {
+    "id": "jaipur-destination",
+    "title": "Jaipur Pink City",
+    "description": "Amer Fort, City Palace, Hawa Mahal, and local bazaars for textiles and handicrafts. Capital of Rajasthan with rich Rajput history. Best time: October to March. Must-visit: Amer Fort, City Palace, Hawa Mahal, Jantar Mantar, Johari Bazaar.",
+    "destination": "jaipur",
+    "type": "destination",
+    "budget_category": "budget",
+    "activities": ["culture", "history", "shopping", "heritage"],
+    "best_time_to_visit": "October to March",
+    "key_attractions": ["Amer Fort", "City Palace", "Hawa Mahal", "Jantar Mantar", "Nahargarh Fort", "Johari Bazaar", "Bapu Bazaar"],
+    "recommended_duration": "2-3 days"
+  },
+  {
+    "id": "jaipur-itinerary",
+    "title": "Jaipur Detailed Itinerary",
+    "description": "Day 1: Morning - Amer Fort (9 AM-12 PM, ₹500 entry, elephant ride optional ₹1,100), Jaigarh Fort (12:30-2 PM). Afternoon - City Palace (2:30-5 PM, ₹500), Jantar Mantar (5:30-6:30 PM, ₹200). Evening - Hawa Mahal (7-8 PM, ₹50), dinner at Chokhi Dhani (₹800-₹1,200). Day 2: Morning - Nahargarh Fort sunrise (6-9 AM, ₹200), breakfast. Afternoon - Shopping at Johari Bazaar and Bapu Bazaar (11 AM-4 PM). Evening - Albert Hall Museum (5-7 PM, ₹300), local Rajasthani dinner.",
+    "destination": "jaipur",
+    "type": "itinerary",
+    "recommended_duration_days": 2,
+    "detailed_activities": [
+      {
+        "day": 1,
+        "morning": ["Amer Fort (9 AM-12 PM, ₹500)", "Jaigarh Fort (12:30-2 PM)"],
+        "afternoon": ["City Palace (2:30-5 PM, ₹500)", "Jantar Mantar (5:30-6:30 PM, ₹200)"],
+        "evening": ["Hawa Mahal (7-8 PM, ₹50)", "Dinner at Chokhi Dhani"],
+        "transport": "Auto-rickshaw or taxi (₹800-₹1,500/day)"
+      },
+      {
+        "day": 2,
+        "morning": ["Nahargarh Fort sunrise (6-9 AM, ₹200)"],
+        "afternoon": ["Shopping at Johari Bazaar and Bapu Bazaar (11 AM-4 PM)"],
+        "evening": ["Albert Hall Museum (5-7 PM, ₹300)", "Rajasthani dinner"],
+        "transport": "Auto-rickshaw"
+      }
+    ]
+  },
+  {
+    "id": "agra-destination",
+    "title": "Agra & Taj Mahal",
+    "description": "Taj Mahal, Agra Fort, and Mehtab Bagh with budget stays around the Taj Ganj area. Home to one of the Seven Wonders. Best time: October to March. Must-visit: Taj Mahal (sunrise/sunset), Agra Fort, Fatehpur Sikri, Mehtab Bagh.",
+    "destination": "agra",
+    "type": "destination",
+    "budget_category": "budget",
+    "activities": ["heritage", "photography", "history"],
+    "best_time_to_visit": "October to March",
+    "key_attractions": ["Taj Mahal", "Agra Fort", "Fatehpur Sikri", "Mehtab Bagh", "Itmad-ud-Daulah"],
+    "recommended_duration": "1-2 days"
+  },
+  {
+    "id": "agra-itinerary",
+    "title": "Agra Detailed Itinerary",
+    "description": "Day 1: Early Morning - Taj Mahal at sunrise (6-8 AM, ₹1,100 for foreigners, ₹50 for Indians), photography. Morning - Agra Fort (9 AM-12 PM, ₹650 for foreigners, ₹50 for Indians). Afternoon - Itmad-ud-Daulah (2-4 PM, ₹310 for foreigners, ₹30 for Indians). Evening - Mehtab Bagh for Taj Mahal sunset view (5-7 PM, ₹300). Day 2 (Optional): Morning - Fatehpur Sikri day trip (6 AM-2 PM, 40 km from Agra, ₹610 for foreigners, ₹50 for Indians).",
+    "destination": "agra",
+    "type": "itinerary",
+    "recommended_duration_days": 1,
+    "detailed_activities": [
+      {
+        "day": 1,
+        "early_morning": ["Taj Mahal at sunrise (6-8 AM, ₹1,100/₹50)"],
+        "morning": ["Agra Fort (9 AM-12 PM, ₹650/₹50)"],
+        "afternoon": ["Itmad-ud-Daulah (2-4 PM, ₹310/₹30)"],
+        "evening": ["Mehtab Bagh for sunset (5-7 PM, ₹300)"],
+        "transport": "Auto-rickshaw (₹500-₹800/day) or cycle rickshaw"
+      }
+    ]
+  },
+  {
+    "id": "recommendations-goa",
+    "title": "Goa Travel Recommendations",
+    "description": "Recommended for: Beach lovers, party enthusiasts, budget travelers, couples. Best for: Water sports, nightlife, relaxation. Avoid: Monsoon season (June-September). Tips: Rent a scooter for mobility, book accommodation in advance during peak season, try local seafood, respect beach rules.",
+    "destination": "goa",
+    "type": "recommendation",
+    "target_audience": ["beach lovers", "party enthusiasts", "budget travelers", "couples"],
+    "best_for": ["water sports", "nightlife", "relaxation"],
+    "avoid_season": "June-September (monsoon)",
+    "tips": ["Rent a scooter for mobility", "Book accommodation in advance", "Try local seafood", "Respect beach rules"]
+  },
+  {
+    "id": "recommendations-delhi",
+    "title": "Delhi Travel Recommendations",
+    "description": "Recommended for: History buffs, food lovers, shoppers, culture enthusiasts. Best for: Heritage sites, street food, shopping. Tips: Use Metro for convenience, start early to avoid crowds, carry cash for street food, dress modestly for religious sites.",
+    "destination": "delhi",
+    "type": "recommendation",
+    "target_audience": ["history buffs", "food lovers", "shoppers", "culture enthusiasts"],
+    "best_for": ["heritage sites", "street food", "shopping"],
+    "tips": ["Use Metro for convenience", "Start early to avoid crowds", "Carry cash for street food", "Dress modestly for religious sites"]
+  }
+]
